@@ -188,7 +188,7 @@ public class AvlTree {
     /**
      * Return the height of t, or -1 if null.
      */
-    private static int height(AvlTree t) {
+    public static int height(AvlTree t) {
         return t == null ? -1 : t.height;
     }
 
