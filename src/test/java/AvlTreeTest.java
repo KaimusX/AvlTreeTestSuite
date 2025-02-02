@@ -107,7 +107,46 @@ public class AvlTreeTest {
     }
 
 //  7. Trigger and verify left-right double rotation. // Left-Right case should rotate twice.
+    @Test
+    public void testAvlTreeLeftRightRotation() {
+        // Initial tree setup: root 6, left child 3, right child 9
+
+        // Insert 4 to trigger Left-Right Rotation
+        avlTree = avlTree.insert(avlTree, 4);
+
+        // Expected tree structure after Left-Right rotation:
+        //        4
+        //       / \
+        //      3   6
+        //           \
+        //            9
+        assertEquals(4, avlTree.element);
+        assertEquals(3, avlTree.left.element);
+        assertEquals(6, avlTree.right.element);
+        assertEquals(9, avlTree.right.right.element);
+    }
+
 //  8. Trigger and verify right-left double rotation. // Right-Left case should rotate twice.
+
+    @Test
+    public void testAvlTreeRightLeftRotation() {
+        // Initial tree setup: root 6, left child 3, right child 9
+
+        // Insert 8 to trigger Right-Left Rotation
+        avlTree = avlTree.insert(avlTree, 8);
+
+        // Expected tree structure after Right-Left rotation:
+        //        8
+        //       / \
+        //      6   9
+        //     /
+        //    3
+        assertEquals(8, avlTree.element);
+        assertEquals(6, avlTree.left.element);
+        assertEquals(9, avlTree.right.element);
+        assertEquals(3, avlTree.left.left.element);
+    }
+
 //  9. Verify node persistence after all insertions. // Ensure no node is lost.
     @Test
     public void testAVLTreeBNodePersistence() {
