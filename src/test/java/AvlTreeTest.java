@@ -43,17 +43,25 @@ public class AvlTreeTest {
 //  2. Insert value on the left. // Add a smaller value to force left insertion.
     @Test
     public void testAVLTreeInsertValueLeft() {
-        avlTree = avlTree.insert(avlTree, 1);
+        avlTree = avlTree.insert(avlTree, 1); // Insert value 1
+
         assertNotNull(avlTree.left);
-        assertEquals(2, avlTree.left.element);
+        assertNotNull(avlTree.left.left);
+
+        assertEquals(3, avlTree.left.element);
+        assertEquals(1, avlTree.left.left.element);
     }
 
 //  3. Insert value on the right. // Add a larger value to force right insertion.
     @Test
     public void testAVLTreeInsertValueRight() {
-        avlTree = avlTree.insert(avlTree, 12);
-        assertNotNull(avlTree.right);
-        assertEquals(10, avlTree.right.element);
+        avlTree = avlTree.insert(avlTree, 12); // Insert value 12
+
+        assertNotNull(avlTree.right); // Right child should exist (9)
+        assertNotNull(avlTree.right.right); // Right of right should now exist (12)
+
+        assertEquals(9, avlTree.right.element); // Right child should still be 9
+        assertEquals(12, avlTree.right.right.element); // 12 should be at right.right
     }
 
 //  4. Verify the balance factor remains valid. // Check that no node is unbalanced.
@@ -62,7 +70,7 @@ public class AvlTreeTest {
         int leftHeight = AvlTree.height(avlTree.left);
         int rightHeight = AvlTree.height(avlTree.right);
         int diffrence = Math.abs(leftHeight - rightHeight);
-        assertTrue(diffrence == 0 || diffrence == 1);
+        assertTrue(diffrence <= 1);
     }
 
 //  Assertion: Expected Property Holds**
