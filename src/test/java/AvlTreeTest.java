@@ -157,19 +157,20 @@ public class AvlTreeTest {
 
 //  9. Verify node persistence after all insertions. // Ensure no node is lost.
     @Test
-    public void testAVLTreeBNodePersistence() {
-        Set<Integer> expectedElements = new HashSet<>(Arrays.asList(1, 2, 3, 6, 9));
-        Set<Integer> capturedElements = new HashSet<>();
+    public void testAVLTreeNodePersistence() {
+        List<Integer> expectedElements = Arrays.asList(1, 2, 3, 6, 9);
+        List<Integer> capturedElements = new ArrayList<>();
 
         avlTree = avlTree.insert(avlTree, 2);
         avlTree = avlTree.insert(avlTree, 1);
 
-        // add all found elements in captured elements
-        // create a method to traverse through
+        // Perform in-order traversal and capture elements
+        inorderTraversal(avlTree, capturedElements);
 
-        assertTrue(expectedElements == capturedElements);
-
+        // Verify that all expected nodes are present and in the correct order
+        assertEquals(expectedElements, capturedElements);
     }
+
 
     //  10. Verify correct BST ordering after all insertions. // Tree must maintain BST properties.
         @Test
