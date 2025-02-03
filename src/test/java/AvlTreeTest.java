@@ -170,11 +170,56 @@ public class AvlTreeTest {
         assertTrue(expectedElements == capturedElements);
 
     }
-//  10. Verify correct BST ordering after all insertions. // Tree must maintain BST properties.
-//  11. Perform a stress test with sequential insertions. // Insert many values in order.
-//  12. Ensure rebalancing occurs during stress test. // Check that tree remains balanced.
+
+    //  10. Verify correct BST ordering after all insertions. // Tree must maintain BST properties.
+        @Test
+        public void testBSTOrdering() {
+            avlTree = avlTree.insert(avlTree, 2);
+            avlTree = avlTree.insert(avlTree, 8);
+            avlTree = avlTree.insert(avlTree, 4);
+
+            List<Integer> inorderTraversal = new ArrayList<>();
+            inorderTraversal(avlTree, inorderTraversal);
+
+            List<Integer> sortedList = new ArrayList<>(inorderTraversal);
+            Collections.sort(sortedList);
+
+            assertEquals(sortedList, inorderTraversal);
+        }
+
+    //  11. Perform a stress test with sequential insertions. // Insert many values in order.
+        @Test
+        public void testSequentialInsertions() {
+            avlTree = new AvlTree();
+
+            for (int i = 1; i <= 1000; i++) {
+                avlTree = avlTree.insert(avlTree, i);
+            }
+
+            // Ensure all elements are in the tree
+            for (int i = 1; i <= 1000; i++) {
+                assertTrue(avlTree.contains(avlTree, i));
+            }
+        }
+
+    //  12. Ensure rebalancing occurs during stress test. // Check that tree remains balanced.
+        @Test
+        public void testRebalancingDuringStressTest() {
+            avlTree = new AvlTree();
+
+            for (int i = 1; i <= 1000; i++) {
+                avlTree = avlTree.insert(avlTree, i);
+                assertTrue(avlTree.repOK_Structure(avlTree));
+            }
+        }
+
+        private void inorderTraversal(AvlTree node, List<Integer> result) {
+            if (node != null) {
+                inorderTraversal(node.left, result);
+                result.add(node.element);
+                inorderTraversal(node.right, result);
+            }
+        }
+    }
 
 
-
-
-}
