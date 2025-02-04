@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AvlTree.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AvlTree Coverage Results</a> &gt; <a href="index.source.html" class="el_package">org.example</a> &gt; <span class="el_source">AvlTree.java</span></div><h1>AvlTree.java</h1><pre class="source lang-java linenums">package org.example;
+
+//package symbolicheap.bounded;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+// import gov.nasa.jpf.symbc.DebugBounded;
+// import gov.nasa.jpf.vm.Verify;
+
+public class AvlTree {
+
+    // Stubs to be intercepted at the bytecode level
+<span class="fc" id="L16">    public void countStructure(AvlTree root) {}</span>
+    public void dumpRootStructure(AvlTree root) {
+<span class="nc" id="L18">    }</span>
+
+    // Extra fields to support execution of hybridRepOK
+<span class="fc" id="L21">    public static final AvlTree SYMBOLICAVLTREE = new AvlTree();</span>
+    public static final int SYMBOLICINT = (int) Integer.MIN_VALUE;
+
+    // Hybrid invariant that tolerates partially symbolic structures
+
+    public boolean hybridRepOK() {
+<span class="nc bnc" id="L27" title="All 2 branches missed.">        if (this == SYMBOLICAVLTREE)</span>
+<span class="nc" id="L28">            return true;</span>
+
+<span class="nc" id="L30">        Set&lt;AvlTree&gt; visited = new HashSet&lt;AvlTree&gt;();</span>
+<span class="nc" id="L31">        List&lt;AvlTree&gt; worklist = new ArrayList&lt;AvlTree&gt;();</span>
+
+<span class="nc" id="L33">        visited.add(this);</span>
+<span class="nc" id="L34">        worklist.add(this);</span>
+
+<span class="nc bnc" id="L36" title="All 2 branches missed.">        while (!worklist.isEmpty()) {</span>
+<span class="nc" id="L37">            AvlTree node = worklist.remove(0);</span>
+
+<span class="nc" id="L39">            AvlTree left = node.left;</span>
+<span class="nc bnc" id="L40" title="All 4 branches missed.">            if (left != null &amp;&amp; left != SYMBOLICAVLTREE) {</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">                if (!visited.add(left))</span>
+<span class="nc" id="L42">                    return false;</span>
+
+<span class="nc" id="L44">                worklist.add(left);</span>
+            }
+
+<span class="nc" id="L47">            AvlTree right = node.right;</span>
+<span class="nc bnc" id="L48" title="All 4 branches missed.">            if (right != null &amp;&amp; right != SYMBOLICAVLTREE) {</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">                if (!visited.add(right))</span>
+<span class="nc" id="L50">                    return false;</span>
+
+<span class="nc" id="L52">                worklist.add(right);</span>
+            }
+
+<span class="nc bnc" id="L55" title="All 14 branches missed.">            if (height != SYMBOLICINT &amp;&amp; left != SYMBOLICAVLTREE &amp;&amp; right != SYMBOLICAVLTREE</span>
+                    &amp;&amp; (left == null || left.height != SYMBOLICINT)
+                    &amp;&amp; (right == null || right.height != SYMBOLICINT)) {
+<span class="nc bnc" id="L58" title="All 2 branches missed.">                int lh = (left == null) ? -1 : left.height;</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">                int rh = (right == null) ? -1 : right.height;</span>
+<span class="nc" id="L60">                int diff = lh - rh;</span>
+<span class="nc bnc" id="L61" title="All 4 branches missed.">                if (diff &lt; -1 || diff &gt; 1)</span>
+<span class="nc" id="L62">                    return false;  // unbalanced!</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">                int maxh = (lh &gt; rh) ? lh : rh;</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">                if (height != 1 + maxh)</span>
+<span class="nc" id="L65">                    return false; // wrong value in height field!</span>
+            }
+<span class="nc" id="L67">        }</span>
+
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        return visited.size() &lt;= LIMIT;</span>
+        //		return true;
+    }
+
+
+    // Private members
+
+    public int element;
+    public int height;
+    public AvlTree left;
+    public AvlTree right;
+
+
+    // Constructors
+
+<span class="fc" id="L84">    public AvlTree() {</span>
+<span class="fc" id="L85">        this.element = 0;</span>
+<span class="fc" id="L86">        this.height = 0;</span>
+<span class="fc" id="L87">        this.left = this.right = null;</span>
+<span class="fc" id="L88">    }</span>
+
+<span class="fc" id="L90">    public AvlTree(int element) {</span>
+<span class="fc" id="L91">        this.element = element;</span>
+<span class="fc" id="L92">        this.height = 1;</span>
+<span class="fc" id="L93">        this.left = this.right = null;</span>
+<span class="fc" id="L94">    }</span>
+
+<span class="nc" id="L96">    public AvlTree(int element, int height, AvlTree left, AvlTree right) {</span>
+<span class="nc" id="L97">        this.element = element;</span>
+<span class="nc" id="L98">        this.height = height;</span>
+<span class="nc" id="L99">        this.left = left;</span>
+<span class="nc" id="L100">        this.right = right;</span>
+<span class="nc" id="L101">    }</span>
+
+
+    // Projectors
+
+    public AvlTree left() {
+<span class="nc" id="L107">        return left;</span>
+    }
+
+    public AvlTree right() {
+<span class="nc" id="L111">        return right;</span>
+    }
+
+
+
+    // ========= Methods to be verified ===================================
+
+
+    // ~~~~~~~~~ Begin findMinimum ~~~~~~~~~~
+
+    public int findMinimum(AvlTree root) {
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        assert(root != null);</span>
+<span class="nc" id="L123">        AvlTree curr = root;</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        while (curr.left() != null) {</span>
+<span class="nc" id="L125">            curr = curr.left();</span>
+        }
+<span class="nc" id="L127">        return curr.element;</span>
+    }
+
+    // ~~~~~~~~~ End of findMinimum ~~~~~~~~~~
+
+
+
+    // ~~~~~~~~~ Begin contains ~~~~~~~~~~
+
+    public boolean contains(AvlTree root, int x) {
+<span class="nc" id="L137">        AvlTree p = root;</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        while (p != null) {</span>
+            //			Verify.ignoreIf(!repOK(root, LIMIT));
+<span class="nc bnc" id="L140" title="All 2 branches missed.">            if (x == p.element) {</span>
+<span class="nc" id="L141">                return true;</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">            } else if (x &lt; p.element) {</span>
+<span class="nc" id="L143">                p = p.left;</span>
+            } else {
+<span class="nc" id="L145">                p = p.right;</span>
+            }
+        }
+<span class="nc" id="L148">        return false;</span>
+    }
+
+    // ~~~~~~~~~ End of contains ~~~~~~~~~~
+
+
+
+    // ~~~~~~~~~ Begin insert ~~~~~~~~~~
+
+    public AvlTree insert(AvlTree root, int x) {
+<span class="fc" id="L158">        AvlTree t = root;</span>
+
+<span class="fc bfc" id="L160" title="All 2 branches covered.">        if (t == null) {</span>
+<span class="fc" id="L161">            t = new AvlTree(x);</span>
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">        } else if (x &lt; t.element) {</span>
+<span class="fc" id="L163">            t = insert(t.left, x);</span>
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">            if (AvlTree.height(t.left) - AvlTree.height(t.right) == 2) {</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">                if (x &lt; t.left.element) {</span>
+<span class="nc" id="L166">                    t = AvlTree.rotateWithLeftChild(t);</span>
+                } else {
+<span class="nc" id="L168">                    t = AvlTree.doubleWithLeftChild(t);</span>
+                }
+            }
+<span class="nc bnc" id="L171" title="All 2 branches missed.">        } else if (x &gt; t.element) {</span>
+<span class="nc" id="L172">            t = insert(t.right, x);</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">            if (AvlTree.height(t.right) - AvlTree.height(t.left) == 2) {</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">                if (x &gt; t.right.element) {</span>
+<span class="nc" id="L175">                    t = AvlTree.rotateWithRightChild(t);</span>
+                } else {
+<span class="nc" id="L177">                    t = AvlTree.doubleWithRightChild(t);</span>
+                }
+            }
+        } else {
+            ; // Duplicate; do nothing
+        }
+<span class="fc" id="L183">        t.height = AvlTree.max(AvlTree.height(t.left), AvlTree.height(t.right)) + 1;</span>
+<span class="fc" id="L184">        return t;</span>
+    }
+
+
+    /**
+     * Return the height of t, or -1 if null.
+     */
+    public static int height(AvlTree t) {
+<span class="pc bpc" id="L192" title="1 of 2 branches missed.">        return t == null ? -1 : t.height;</span>
+    }
+
+    /**
+     * Return maximum of two ints.
+     */
+    private static int max(int lhs, int rhs) {
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">        return lhs &gt; rhs ? lhs : rhs;</span>
+    }
+
+    /**
+     * Double rotate binary tree node: first left child with its right child; then
+     * node k3 with new left child. For AVL trees, this is a double rotation for
+     * case 2. Update heights, then return new root.
+     */
+    private static AvlTree doubleWithLeftChild(final AvlTree k3) {
+<span class="nc" id="L208">        k3.left = AvlTree.rotateWithRightChild(k3.left);</span>
+<span class="nc" id="L209">        return AvlTree.rotateWithLeftChild(k3);</span>
+    }
+
+    /**
+     * Double rotate binary tree node: first right child with its left child; then
+     * node k1 with new right child. For AVL trees, this is a double rotation for
+     * case 3. Update heights, then return new root.
+     */
+    private static AvlTree doubleWithRightChild(final AvlTree k1) {
+<span class="nc" id="L218">        k1.right = AvlTree.rotateWithLeftChild(k1.right);</span>
+<span class="nc" id="L219">        return AvlTree.rotateWithRightChild(k1);</span>
+    }
+
+    /**
+     * Rotate binary tree node with left child. For AVL trees, this is a single
+     * rotation for case 1. Update heights, then return new root.
+     */
+    private static AvlTree rotateWithLeftChild(final AvlTree k2) {
+<span class="nc" id="L227">        final AvlTree k1 = k2.left;</span>
+<span class="nc" id="L228">        k2.left = k1.right;</span>
+<span class="nc" id="L229">        k1.right = k2;</span>
+<span class="nc" id="L230">        k2.height = AvlTree.max(AvlTree.height(k2.left), AvlTree</span>
+<span class="nc" id="L231">                .height(k2.right)) + 1;</span>
+<span class="nc" id="L232">        k1.height = AvlTree.max(AvlTree.height(k1.left), k2.height) + 1;</span>
+<span class="nc" id="L233">        return k1;</span>
+    }
+
+    /**
+     * Rotate binary tree node with right child. For AVL trees, this is a single
+     * rotation for case 4. Update heights, then return new root.
+     */
+    private static AvlTree rotateWithRightChild(final AvlTree k1) {
+<span class="nc" id="L241">        final AvlTree k2 = k1.right;</span>
+<span class="nc" id="L242">        k1.right = k2.left;</span>
+<span class="nc" id="L243">        k2.left = k1;</span>
+<span class="nc" id="L244">        k1.height = AvlTree.max(AvlTree.height(k1.left), AvlTree</span>
+<span class="nc" id="L245">                .height(k1.right)) + 1;</span>
+<span class="nc" id="L246">        k2.height = AvlTree.max(AvlTree.height(k2.right), k1.height) + 1;</span>
+<span class="nc" id="L247">        return k2;</span>
+    }
+
+    // ~~~~~~~~~ End of insert ~~~~~~~~~~
+
+
+
+    //--------------------------------------bfsTraverse-begin-------------------------------------//
+
+
+    public void bfsTraverse(AvlTree root){
+<span class="nc" id="L258">        Set&lt;AvlTree&gt; visited = new HashSet&lt;AvlTree&gt;();</span>
+<span class="nc" id="L259">        List&lt;AvlTree&gt; worklist = new ArrayList&lt;AvlTree&gt;();</span>
+<span class="nc" id="L260">        visited.add(root);</span>
+<span class="nc" id="L261">        worklist.add(root);</span>
+<span class="nc bnc" id="L262" title="All 4 branches missed.">        while (!worklist.isEmpty() &amp;&amp; visited.size() &lt;= LIMIT) {</span>
+<span class="nc" id="L263">            AvlTree node = worklist.remove(0);</span>
+<span class="nc" id="L264">            AvlTree left = node.left;</span>
+<span class="nc bnc" id="L265" title="All 4 branches missed.">            if (left != null &amp;&amp; visited.add(left)) {</span>
+
+<span class="nc" id="L267">                worklist.add(left);</span>
+            }
+<span class="nc" id="L269">            AvlTree right = node.right;</span>
+<span class="nc bnc" id="L270" title="All 4 branches missed.">            if (right != null &amp;&amp; visited.add(right)) {</span>
+<span class="nc" id="L271">                worklist.add(right);</span>
+            }
+<span class="nc" id="L273">        }</span>
+<span class="nc" id="L274">    }</span>
+
+
+    //--------------------------------------bfsTraverse-end-------------------------------------//
+
+
+    //--------------------------------------dfsTraverse-begin-------------------------------------//
+
+
+    public boolean dfsTraverse(AvlTree root){
+<span class="nc" id="L284">        HashSet&lt;AvlTree&gt; visited = new HashSet&lt;AvlTree&gt;();</span>
+<span class="nc" id="L285">        dfsTraverseAux(root, visited);</span>
+<span class="nc bnc" id="L286" title="All 2 branches missed.">        return visited.size() &lt;= LIMIT;</span>
+    }
+
+
+    private void dfsTraverseAux(AvlTree root, HashSet&lt;AvlTree&gt; visited){
+<span class="nc bnc" id="L291" title="All 4 branches missed.">        if (root != null &amp;&amp; visited.add(root)){</span>
+
+<span class="nc bnc" id="L293" title="All 2 branches missed.">            if (root.left != null){</span>
+<span class="nc" id="L294">                dfsTraverseAux(root.left, visited);</span>
+            }
+<span class="nc bnc" id="L296" title="All 2 branches missed.">            if (root.right != null){</span>
+<span class="nc" id="L297">                dfsTraverseAux(root.right, visited);</span>
+            }
+
+        }
+<span class="nc" id="L301">    }</span>
+
+    //--------------------------------------dfsTraverse-end-------------------------------------//
+
+
+
+
+    //------------ begin repOK_ConcretePost ---------------//
+
+    public boolean repOK_ConcretePost(AvlTree root) {
+<span class="nc bnc" id="L311" title="All 4 branches missed.">        return repOK_StructurePost(root) &amp;&amp; repOK_Ordered(root);</span>
+    }
+
+    public boolean repOK_StructurePost(AvlTree root) {
+<span class="nc" id="L315">        Set&lt;AvlTree&gt; visited = new HashSet&lt;AvlTree&gt;();</span>
+<span class="nc" id="L316">        List&lt;AvlTree&gt; worklist = new ArrayList&lt;AvlTree&gt;();</span>
+
+<span class="nc bnc" id="L318" title="All 2 branches missed.">        if(root != null) {</span>
+<span class="nc" id="L319">            visited.add(root);</span>
+<span class="nc" id="L320">            worklist.add(root);</span>
+        }
+
+<span class="nc bnc" id="L323" title="All 2 branches missed.">        while (!worklist.isEmpty()) {</span>
+
+<span class="nc" id="L325">            AvlTree node = worklist.remove(0);</span>
+
+<span class="nc bnc" id="L327" title="All 2 branches missed.">            if (!repOK_Structure_CheckHeight(node)){</span>
+
+<span class="nc" id="L329">                return false; // Unbalanced or wrong height value!</span>
+            }
+
+<span class="nc" id="L332">            AvlTree left = node.left();</span>
+<span class="nc bnc" id="L333" title="All 2 branches missed.">            if (left != null) {</span>
+<span class="nc bnc" id="L334" title="All 2 branches missed.">                if (!visited.add(left)){</span>
+<span class="nc" id="L335">                    return false; // Not acyclic!</span>
+                }
+
+<span class="nc" id="L338">                worklist.add(left);</span>
+            }
+
+<span class="nc" id="L341">            AvlTree right = node.right();</span>
+<span class="nc bnc" id="L342" title="All 2 branches missed.">            if (right != null) {</span>
+<span class="nc bnc" id="L343" title="All 2 branches missed.">                if (!visited.add(right)){</span>
+<span class="nc" id="L344">                    return false; // Not acyclic!</span>
+                }
+
+<span class="nc" id="L347">                worklist.add(right);</span>
+            }
+
+<span class="nc" id="L350">        }</span>
+<span class="nc" id="L351">        return true;</span>
+    }
+
+
+
+
+    // ========= CONCRETE INVARIANT ====================
+
+    // ~~~~~~~~~ Begin repOK_Concrete ~~~~~~~~~~
+
+    public boolean repOK_Concrete(AvlTree root) {
+<span class="nc bnc" id="L362" title="All 4 branches missed.">        return repOK_Structure(root) &amp;&amp; repOK_Ordered(root);</span>
+    }
+
+    public boolean repOK_Structure(AvlTree root) {
+<span class="nc" id="L366">        Set&lt;AvlTree&gt; visited = new HashSet&lt;AvlTree&gt;();</span>
+<span class="nc" id="L367">        List&lt;AvlTree&gt; worklist = new ArrayList&lt;AvlTree&gt;();</span>
+
+<span class="nc bnc" id="L369" title="All 2 branches missed.">        if(root != null) {</span>
+<span class="nc" id="L370">            visited.add(root);</span>
+<span class="nc" id="L371">            worklist.add(root);</span>
+        }
+
+<span class="nc bnc" id="L374" title="All 2 branches missed.">        while (!worklist.isEmpty()) {</span>
+
+<span class="nc" id="L376">            AvlTree node = worklist.remove(0);</span>
+
+<span class="nc bnc" id="L378" title="All 2 branches missed.">            if (!repOK_Structure_CheckHeight(node))</span>
+<span class="nc" id="L379">                return false; // Unbalanced or wrong height value!</span>
+
+<span class="nc" id="L381">            AvlTree left = node.left();</span>
+<span class="nc bnc" id="L382" title="All 2 branches missed.">            if (left != null) {</span>
+<span class="nc bnc" id="L383" title="All 2 branches missed.">                if (!visited.add(left))</span>
+<span class="nc" id="L384">                    return false; // Not acyclic!</span>
+
+<span class="nc" id="L386">                worklist.add(left);</span>
+            }
+
+<span class="nc" id="L389">            AvlTree right = node.right();</span>
+<span class="nc bnc" id="L390" title="All 2 branches missed.">            if (right != null) {</span>
+<span class="nc bnc" id="L391" title="All 2 branches missed.">                if (!visited.add(right))</span>
+<span class="nc" id="L392">                    return false; // Not acyclic!</span>
+
+<span class="nc" id="L394">                worklist.add(right);</span>
+            }
+
+<span class="nc" id="L397">        }</span>
+<span class="nc bnc" id="L398" title="All 2 branches missed.">        return visited.size() &lt;= LIMIT;</span>
+    }
+
+
+    // Return true if node.height is consistent and within [-1, 1].
+    // Assume node != null.
+    //
+    public boolean repOK_Structure_CheckHeight(AvlTree node) {
+        int lh, rh;
+
+<span class="nc bnc" id="L408" title="All 2 branches missed.">        if (node.left == null)</span>
+<span class="nc" id="L409">            lh = -1;</span>
+        else
+<span class="nc" id="L411">            lh = node.left.height;</span>
+
+<span class="nc bnc" id="L413" title="All 2 branches missed.">        if (node.right == null)</span>
+<span class="nc" id="L414">            rh = -1;</span>
+        else
+<span class="nc" id="L416">            rh = node.right.height;</span>
+
+<span class="nc" id="L418">        int difference = lh - rh;</span>
+<span class="nc bnc" id="L419" title="All 4 branches missed.">        if (difference &lt; -1 || difference &gt; 1){</span>
+<span class="nc" id="L420">            return false; // Not balanced!</span>
+        }
+
+<span class="nc" id="L423">        int max = AvlTree.max(lh, rh);</span>
+<span class="nc bnc" id="L424" title="All 2 branches missed.">        if (node.height != 1 + max){</span>
+<span class="nc" id="L425">            return false; // Wrong value in height field!</span>
+        }
+
+<span class="nc" id="L428">        return true;</span>
+    }
+
+
+    public boolean repOK_Ordered(AvlTree root) {
+<span class="nc" id="L433">        int min = repOK_findMin(root);</span>
+<span class="nc" id="L434">        int max = repOK_findMax(root);</span>
+<span class="nc bnc" id="L435" title="All 2 branches missed.">        if (!repOK_ElementsAreOrdered(root, min-1, max+1)) {</span>
+<span class="nc" id="L436">            return false;</span>
+        }
+
+        // PEND: What does this do? Is it really necessary?
+		/*
+		List&lt;AvlTree&gt; worklist = new ArrayList&lt;AvlTree&gt;();
+		worklist.add(root);
+		while (!worklist.isEmpty()) {
+			AvlTree current = worklist.remove(0);
+			if (current.left() != null) {
+				worklist.add(current.left());
+			}
+			if (current.right() != null) {
+				worklist.add(current.right());
+			}
+		}
+		 */
+
+<span class="nc" id="L454">        return true;</span>
+    }
+
+    // Return smallest element.
+    // Assume root != null.
+    //
+    private int repOK_findMin(AvlTree root) {
+<span class="nc" id="L461">        AvlTree curr = root;</span>
+<span class="nc bnc" id="L462" title="All 2 branches missed.">        while (curr.left() != null) {</span>
+<span class="nc" id="L463">            curr = curr.left();</span>
+        }
+<span class="nc" id="L465">        return curr.element;</span>
+    }
+
+    // Return largest element.
+    // Assume root != null.
+    //
+    private int repOK_findMax(AvlTree root) {
+<span class="nc" id="L472">        AvlTree curr = root;</span>
+<span class="nc bnc" id="L473" title="All 2 branches missed.">        while (curr.right() != null) {</span>
+<span class="nc" id="L474">            curr = curr.right();</span>
+        }
+<span class="nc" id="L476">        return curr.element;</span>
+    }
+
+    // Return true iff e is a strict (no dups allowed!) search tree.
+    // Assume e != null.
+    //
+    public boolean repOK_ElementsAreOrdered(AvlTree e, int min, int max) {
+<span class="nc bnc" id="L483" title="All 4 branches missed.">        if ((e.element &lt;= min) || (e.element &gt;= max)) {</span>
+<span class="nc" id="L484">            return false;</span>
+        }
+<span class="nc bnc" id="L486" title="All 2 branches missed.">        if (e.left() != null) {</span>
+<span class="nc bnc" id="L487" title="All 2 branches missed.">            if (!repOK_ElementsAreOrdered(e.left(), min, e.element)) {</span>
+<span class="nc" id="L488">                return false;</span>
+            }
+        }
+<span class="nc bnc" id="L491" title="All 2 branches missed.">        if (e.right() != null) {</span>
+<span class="nc bnc" id="L492" title="All 2 branches missed.">            if (!repOK_ElementsAreOrdered(e.right(), e.element, max)) {</span>
+<span class="nc" id="L493">                return false;</span>
+            }
+        }
+<span class="nc" id="L496">        return true;</span>
+    }
+
+    // ~~~~~~~~~ End of repOK_Concrete ~~~~~~~~~~
+
+
+
+    // ~~~~~~~~~ Begin dumpTree (just for manual testing purposes) ~~~~~~~~~~~
+
+    public static void dumpTree(AvlTree root) {
+<span class="nc" id="L506">        System.out.println(&quot;&quot;);</span>
+<span class="nc" id="L507">        dumpTree(root, 0);</span>
+<span class="nc" id="L508">        System.out.println(&quot;&quot;);</span>
+<span class="nc" id="L509">    }</span>
+
+    private static void dumpTree(AvlTree root, int level) {
+<span class="nc bnc" id="L512" title="All 2 branches missed.">        if(root == null)</span>
+<span class="nc" id="L513">            return;</span>
+<span class="nc" id="L514">        dumpTree(root.right, level+1);</span>
+<span class="nc bnc" id="L515" title="All 2 branches missed.">        if(level != 0){</span>
+<span class="nc bnc" id="L516" title="All 2 branches missed.">            for(int i = 0; i &lt; level - 1; i++)</span>
+<span class="nc" id="L517">                System.out.print(&quot;\t&quot;);</span>
+            //			System.out.println(&quot;|-------&quot; + root.element);
+<span class="nc" id="L519">            System.out.println(&quot;|-------&quot; + root.hashCode());</span>
+        }
+        else
+            //			System.out.println(root.element);
+<span class="nc" id="L523">            System.out.println(root.hashCode());</span>
+<span class="nc" id="L524">        dumpTree(root.left, level+1);</span>
+<span class="nc" id="L525">    }</span>
+
+    // ~~~~~~~~~ End of dumpTree ~~~~~~~~~~
+
+
+    public void myMethodTest(AvlTree avl) {
+<span class="nc bnc" id="L531" title="All 2 branches missed.">        if (avl != null)</span>
+<span class="nc" id="L532">            avl = avl.left;</span>
+<span class="nc" id="L533">    }</span>
+
+    //marked in tables as repOK_Concrete
+<span class="fc" id="L536">    private static int LIMIT = 10;</span>
+    public static void main(String[] args) {
+
+<span class="fc" id="L539">        AvlTree X = new AvlTree(10);</span>
+        // X = (AvlTree) DebugBounded.makeSymbolicRef(&quot;X&quot;, X);
+//		X = (AvlTree) DebugBounded.makeSymbolicRefBounded(&quot;X&quot;, X);
+
+<span class="pc bpc" id="L543" title="1 of 2 branches missed.">        if (X != null) {</span>
+            try {
+<span class="fc" id="L545">                X.insert(X, 5);</span>
+
+<span class="nc" id="L547">            } catch (Exception e) {</span>
+<span class="nc" id="L548">                X.dumpRootStructure(X);</span>
+<span class="fc" id="L549">            }</span>
+<span class="fc" id="L550">            X.countStructure(X);</span>
+        }
+<span class="fc" id="L552">    }</span>
+
+
+
+
+} // ~~~~~~~~~~~~~~~~~ End of class ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

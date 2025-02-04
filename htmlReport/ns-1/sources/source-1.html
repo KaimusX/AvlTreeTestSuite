@@ -1,0 +1,673 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > AvlTree</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example</a>
+</div>
+
+<h1>Coverage Summary for Class: AvlTree (org.example)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AvlTree</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    35.3%
+  </span>
+  <span class="absValue">
+    (12/34)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    15.7%
+  </span>
+  <span class="absValue">
+    (26/166)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    27.6%
+  </span>
+  <span class="absValue">
+    (59/214)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example;
+&nbsp;
+&nbsp;//package symbolicheap.bounded;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashSet;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Set;
+&nbsp;
+&nbsp;// import gov.nasa.jpf.symbc.DebugBounded;
+&nbsp;// import gov.nasa.jpf.vm.Verify;
+&nbsp;
+<b class="fc">&nbsp;public class AvlTree {</b>
+&nbsp;
+&nbsp;    // Stubs to be intercepted at the bytecode level
+<b class="nc">&nbsp;    public void countStructure(AvlTree root) {}</b>
+&nbsp;    public void dumpRootStructure(AvlTree root) {
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    // Extra fields to support execution of hybridRepOK
+<b class="fc">&nbsp;    public static final AvlTree SYMBOLICAVLTREE = new AvlTree();</b>
+&nbsp;    public static final int SYMBOLICINT = (int) Integer.MIN_VALUE;
+&nbsp;
+&nbsp;    // Hybrid invariant that tolerates partially symbolic structures
+&nbsp;
+&nbsp;    public boolean hybridRepOK() {
+<b class="nc">&nbsp;        if (this == SYMBOLICAVLTREE)</b>
+<b class="nc">&nbsp;            return true;</b>
+&nbsp;
+<b class="nc">&nbsp;        Set&lt;AvlTree&gt; visited = new HashSet&lt;AvlTree&gt;();</b>
+<b class="nc">&nbsp;        List&lt;AvlTree&gt; worklist = new ArrayList&lt;AvlTree&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;        visited.add(this);</b>
+<b class="nc">&nbsp;        worklist.add(this);</b>
+&nbsp;
+<b class="nc">&nbsp;        while (!worklist.isEmpty()) {</b>
+<b class="nc">&nbsp;            AvlTree node = worklist.remove(0);</b>
+&nbsp;
+<b class="nc">&nbsp;            AvlTree left = node.left;</b>
+<b class="nc">&nbsp;            if (left != null &amp;&amp; left != SYMBOLICAVLTREE) {</b>
+<b class="nc">&nbsp;                if (!visited.add(left))</b>
+<b class="nc">&nbsp;                    return false;</b>
+&nbsp;
+<b class="nc">&nbsp;                worklist.add(left);</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            AvlTree right = node.right;</b>
+<b class="nc">&nbsp;            if (right != null &amp;&amp; right != SYMBOLICAVLTREE) {</b>
+<b class="nc">&nbsp;                if (!visited.add(right))</b>
+<b class="nc">&nbsp;                    return false;</b>
+&nbsp;
+<b class="nc">&nbsp;                worklist.add(right);</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            if (height != SYMBOLICINT &amp;&amp; left != SYMBOLICAVLTREE &amp;&amp; right != SYMBOLICAVLTREE</b>
+&nbsp;                    &amp;&amp; (left == null || left.height != SYMBOLICINT)
+&nbsp;                    &amp;&amp; (right == null || right.height != SYMBOLICINT)) {
+<b class="nc">&nbsp;                int lh = (left == null) ? -1 : left.height;</b>
+<b class="nc">&nbsp;                int rh = (right == null) ? -1 : right.height;</b>
+<b class="nc">&nbsp;                int diff = lh - rh;</b>
+<b class="nc">&nbsp;                if (diff &lt; -1 || diff &gt; 1)</b>
+<b class="nc">&nbsp;                    return false;  // unbalanced!</b>
+<b class="nc">&nbsp;                int maxh = (lh &gt; rh) ? lh : rh;</b>
+<b class="nc">&nbsp;                if (height != 1 + maxh)</b>
+<b class="nc">&nbsp;                    return false; // wrong value in height field!</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return visited.size() &lt;= LIMIT;</b>
+&nbsp;        //		return true;
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Private members
+&nbsp;
+&nbsp;    public int element;
+&nbsp;    public int height;
+&nbsp;    public AvlTree left;
+&nbsp;    public AvlTree right;
+&nbsp;
+&nbsp;
+&nbsp;    // Constructors
+&nbsp;
+<b class="fc">&nbsp;    public AvlTree() {</b>
+<b class="fc">&nbsp;        this.element = 0;</b>
+<b class="fc">&nbsp;        this.height = 0;</b>
+<b class="fc">&nbsp;        this.left = this.right = null;</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public AvlTree(int element) {</b>
+<b class="fc">&nbsp;        this.element = element;</b>
+<b class="fc">&nbsp;        this.height = 1;</b>
+<b class="fc">&nbsp;        this.left = this.right = null;</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public AvlTree(int element, int height, AvlTree left, AvlTree right) {</b>
+<b class="fc">&nbsp;        this.element = element;</b>
+<b class="fc">&nbsp;        this.height = height;</b>
+<b class="fc">&nbsp;        this.left = left;</b>
+<b class="fc">&nbsp;        this.right = right;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Projectors
+&nbsp;
+&nbsp;    public AvlTree left() {
+<b class="fc">&nbsp;        return left;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public AvlTree right() {
+<b class="fc">&nbsp;        return right;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    // ========= Methods to be verified ===================================
+&nbsp;
+&nbsp;
+&nbsp;    // ~~~~~~~~~ Begin findMinimum ~~~~~~~~~~
+&nbsp;
+&nbsp;    public int findMinimum(AvlTree root) {
+<b class="nc">&nbsp;        assert(root != null);</b>
+<b class="nc">&nbsp;        AvlTree curr = root;</b>
+<b class="nc">&nbsp;        while (curr.left() != null) {</b>
+<b class="nc">&nbsp;            curr = curr.left();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return curr.element;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // ~~~~~~~~~ End of findMinimum ~~~~~~~~~~
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    // ~~~~~~~~~ Begin contains ~~~~~~~~~~
+&nbsp;
+&nbsp;    public boolean contains(AvlTree root, int x) {
+<b class="fc">&nbsp;        AvlTree p = root;</b>
+<b class="fc">&nbsp;        while (p != null) {</b>
+&nbsp;            //			Verify.ignoreIf(!repOK(root, LIMIT));
+<b class="pc">&nbsp;            if (x == p.element) {</b>
+<b class="nc">&nbsp;                return true;</b>
+<b class="pc">&nbsp;            } else if (x &lt; p.element) {</b>
+<b class="fc">&nbsp;                p = p.left;</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                p = p.right;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // ~~~~~~~~~ End of contains ~~~~~~~~~~
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    // ~~~~~~~~~ Begin insert ~~~~~~~~~~
+&nbsp;
+&nbsp;    public AvlTree insert(AvlTree root, int x) {
+<b class="fc">&nbsp;        AvlTree t = root;</b>
+&nbsp;
+<b class="fc">&nbsp;        if (t == null) {</b>
+<b class="fc">&nbsp;            t = new AvlTree(x);</b>
+<b class="fc">&nbsp;        } else if (x &lt; t.element) {</b>
+<b class="fc">&nbsp;            t = insert(t.left, x);</b>
+<b class="pc">&nbsp;            if (AvlTree.height(t.left) - AvlTree.height(t.right) == 2) {</b>
+<b class="nc">&nbsp;                if (x &lt; t.left.element) {</b>
+<b class="nc">&nbsp;                    t = AvlTree.rotateWithLeftChild(t);</b>
+&nbsp;                } else {
+<b class="nc">&nbsp;                    t = AvlTree.doubleWithLeftChild(t);</b>
+&nbsp;                }
+&nbsp;            }
+<b class="pc">&nbsp;        } else if (x &gt; t.element) {</b>
+<b class="fc">&nbsp;            t = insert(t.right, x);</b>
+<b class="pc">&nbsp;            if (AvlTree.height(t.right) - AvlTree.height(t.left) == 2) {</b>
+<b class="nc">&nbsp;                if (x &gt; t.right.element) {</b>
+<b class="nc">&nbsp;                    t = AvlTree.rotateWithRightChild(t);</b>
+&nbsp;                } else {
+<b class="nc">&nbsp;                    t = AvlTree.doubleWithRightChild(t);</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        } else {
+&nbsp;            ; // Duplicate; do nothing
+&nbsp;        }
+<b class="fc">&nbsp;        t.height = AvlTree.max(AvlTree.height(t.left), AvlTree.height(t.right)) + 1;</b>
+<b class="fc">&nbsp;        return t;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Return the height of t, or -1 if null.
+&nbsp;     */
+&nbsp;    public static int height(AvlTree t) {
+<b class="fc">&nbsp;        return t == null ? -1 : t.height;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Return maximum of two ints.
+&nbsp;     */
+&nbsp;    private static int max(int lhs, int rhs) {
+<b class="pc">&nbsp;        return lhs &gt; rhs ? lhs : rhs;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Double rotate binary tree node: first left child with its right child; then
+&nbsp;     * node k3 with new left child. For AVL trees, this is a double rotation for
+&nbsp;     * case 2. Update heights, then return new root.
+&nbsp;     */
+&nbsp;    private static AvlTree doubleWithLeftChild(final AvlTree k3) {
+<b class="nc">&nbsp;        k3.left = AvlTree.rotateWithRightChild(k3.left);</b>
+<b class="nc">&nbsp;        return AvlTree.rotateWithLeftChild(k3);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Double rotate binary tree node: first right child with its left child; then
+&nbsp;     * node k1 with new right child. For AVL trees, this is a double rotation for
+&nbsp;     * case 3. Update heights, then return new root.
+&nbsp;     */
+&nbsp;    private static AvlTree doubleWithRightChild(final AvlTree k1) {
+<b class="nc">&nbsp;        k1.right = AvlTree.rotateWithLeftChild(k1.right);</b>
+<b class="nc">&nbsp;        return AvlTree.rotateWithRightChild(k1);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Rotate binary tree node with left child. For AVL trees, this is a single
+&nbsp;     * rotation for case 1. Update heights, then return new root.
+&nbsp;     */
+&nbsp;    private static AvlTree rotateWithLeftChild(final AvlTree k2) {
+<b class="nc">&nbsp;        final AvlTree k1 = k2.left;</b>
+<b class="nc">&nbsp;        k2.left = k1.right;</b>
+<b class="nc">&nbsp;        k1.right = k2;</b>
+<b class="nc">&nbsp;        k2.height = AvlTree.max(AvlTree.height(k2.left), AvlTree</b>
+<b class="nc">&nbsp;                .height(k2.right)) + 1;</b>
+<b class="nc">&nbsp;        k1.height = AvlTree.max(AvlTree.height(k1.left), k2.height) + 1;</b>
+<b class="nc">&nbsp;        return k1;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Rotate binary tree node with right child. For AVL trees, this is a single
+&nbsp;     * rotation for case 4. Update heights, then return new root.
+&nbsp;     */
+&nbsp;    private static AvlTree rotateWithRightChild(final AvlTree k1) {
+<b class="nc">&nbsp;        final AvlTree k2 = k1.right;</b>
+<b class="nc">&nbsp;        k1.right = k2.left;</b>
+<b class="nc">&nbsp;        k2.left = k1;</b>
+<b class="nc">&nbsp;        k1.height = AvlTree.max(AvlTree.height(k1.left), AvlTree</b>
+<b class="nc">&nbsp;                .height(k1.right)) + 1;</b>
+<b class="nc">&nbsp;        k2.height = AvlTree.max(AvlTree.height(k2.right), k1.height) + 1;</b>
+<b class="nc">&nbsp;        return k2;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // ~~~~~~~~~ End of insert ~~~~~~~~~~
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    //--------------------------------------bfsTraverse-begin-------------------------------------//
+&nbsp;
+&nbsp;
+&nbsp;    public void bfsTraverse(AvlTree root){
+<b class="nc">&nbsp;        Set&lt;AvlTree&gt; visited = new HashSet&lt;AvlTree&gt;();</b>
+<b class="nc">&nbsp;        List&lt;AvlTree&gt; worklist = new ArrayList&lt;AvlTree&gt;();</b>
+<b class="nc">&nbsp;        visited.add(root);</b>
+<b class="nc">&nbsp;        worklist.add(root);</b>
+<b class="nc">&nbsp;        while (!worklist.isEmpty() &amp;&amp; visited.size() &lt;= LIMIT) {</b>
+<b class="nc">&nbsp;            AvlTree node = worklist.remove(0);</b>
+<b class="nc">&nbsp;            AvlTree left = node.left;</b>
+<b class="nc">&nbsp;            if (left != null &amp;&amp; visited.add(left)) {</b>
+&nbsp;
+<b class="nc">&nbsp;                worklist.add(left);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            AvlTree right = node.right;</b>
+<b class="nc">&nbsp;            if (right != null &amp;&amp; visited.add(right)) {</b>
+<b class="nc">&nbsp;                worklist.add(right);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    //--------------------------------------bfsTraverse-end-------------------------------------//
+&nbsp;
+&nbsp;
+&nbsp;    //--------------------------------------dfsTraverse-begin-------------------------------------//
+&nbsp;
+&nbsp;
+&nbsp;    public boolean dfsTraverse(AvlTree root){
+<b class="nc">&nbsp;        HashSet&lt;AvlTree&gt; visited = new HashSet&lt;AvlTree&gt;();</b>
+<b class="nc">&nbsp;        dfsTraverseAux(root, visited);</b>
+<b class="nc">&nbsp;        return visited.size() &lt;= LIMIT;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    private void dfsTraverseAux(AvlTree root, HashSet&lt;AvlTree&gt; visited){
+<b class="nc">&nbsp;        if (root != null &amp;&amp; visited.add(root)){</b>
+&nbsp;
+<b class="nc">&nbsp;            if (root.left != null){</b>
+<b class="nc">&nbsp;                dfsTraverseAux(root.left, visited);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            if (root.right != null){</b>
+<b class="nc">&nbsp;                dfsTraverseAux(root.right, visited);</b>
+&nbsp;            }
+&nbsp;
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    //--------------------------------------dfsTraverse-end-------------------------------------//
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    //------------ begin repOK_ConcretePost ---------------//
+&nbsp;
+&nbsp;    public boolean repOK_ConcretePost(AvlTree root) {
+<b class="nc">&nbsp;        return repOK_StructurePost(root) &amp;&amp; repOK_Ordered(root);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean repOK_StructurePost(AvlTree root) {
+<b class="nc">&nbsp;        Set&lt;AvlTree&gt; visited = new HashSet&lt;AvlTree&gt;();</b>
+<b class="nc">&nbsp;        List&lt;AvlTree&gt; worklist = new ArrayList&lt;AvlTree&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;        if(root != null) {</b>
+<b class="nc">&nbsp;            visited.add(root);</b>
+<b class="nc">&nbsp;            worklist.add(root);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        while (!worklist.isEmpty()) {</b>
+&nbsp;
+<b class="nc">&nbsp;            AvlTree node = worklist.remove(0);</b>
+&nbsp;
+<b class="nc">&nbsp;            if (!repOK_Structure_CheckHeight(node)){</b>
+&nbsp;
+<b class="nc">&nbsp;                return false; // Unbalanced or wrong height value!</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            AvlTree left = node.left();</b>
+<b class="nc">&nbsp;            if (left != null) {</b>
+<b class="nc">&nbsp;                if (!visited.add(left)){</b>
+<b class="nc">&nbsp;                    return false; // Not acyclic!</b>
+&nbsp;                }
+&nbsp;
+<b class="nc">&nbsp;                worklist.add(left);</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            AvlTree right = node.right();</b>
+<b class="nc">&nbsp;            if (right != null) {</b>
+<b class="nc">&nbsp;                if (!visited.add(right)){</b>
+<b class="nc">&nbsp;                    return false; // Not acyclic!</b>
+&nbsp;                }
+&nbsp;
+<b class="nc">&nbsp;                worklist.add(right);</b>
+&nbsp;            }
+&nbsp;
+&nbsp;        }
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    // ========= CONCRETE INVARIANT ====================
+&nbsp;
+&nbsp;    // ~~~~~~~~~ Begin repOK_Concrete ~~~~~~~~~~
+&nbsp;
+&nbsp;    public boolean repOK_Concrete(AvlTree root) {
+<b class="nc">&nbsp;        return repOK_Structure(root) &amp;&amp; repOK_Ordered(root);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean repOK_Structure(AvlTree root) {
+<b class="fc">&nbsp;        Set&lt;AvlTree&gt; visited = new HashSet&lt;AvlTree&gt;();</b>
+<b class="fc">&nbsp;        List&lt;AvlTree&gt; worklist = new ArrayList&lt;AvlTree&gt;();</b>
+&nbsp;
+<b class="pc">&nbsp;        if(root != null) {</b>
+<b class="fc">&nbsp;            visited.add(root);</b>
+<b class="fc">&nbsp;            worklist.add(root);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        while (!worklist.isEmpty()) {</b>
+&nbsp;
+<b class="fc">&nbsp;            AvlTree node = worklist.remove(0);</b>
+&nbsp;
+<b class="pc">&nbsp;            if (!repOK_Structure_CheckHeight(node))</b>
+<b class="nc">&nbsp;                return false; // Unbalanced or wrong height value!</b>
+&nbsp;
+<b class="fc">&nbsp;            AvlTree left = node.left();</b>
+<b class="pc">&nbsp;            if (left != null) {</b>
+<b class="nc">&nbsp;                if (!visited.add(left))</b>
+<b class="nc">&nbsp;                    return false; // Not acyclic!</b>
+&nbsp;
+<b class="nc">&nbsp;                worklist.add(left);</b>
+&nbsp;            }
+&nbsp;
+<b class="fc">&nbsp;            AvlTree right = node.right();</b>
+<b class="pc">&nbsp;            if (right != null) {</b>
+<b class="nc">&nbsp;                if (!visited.add(right))</b>
+<b class="nc">&nbsp;                    return false; // Not acyclic!</b>
+&nbsp;
+<b class="nc">&nbsp;                worklist.add(right);</b>
+&nbsp;            }
+&nbsp;
+&nbsp;        }
+<b class="pc">&nbsp;        return visited.size() &lt;= LIMIT;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Return true if node.height is consistent and within [-1, 1].
+&nbsp;    // Assume node != null.
+&nbsp;    //
+&nbsp;    public boolean repOK_Structure_CheckHeight(AvlTree node) {
+&nbsp;        int lh, rh;
+&nbsp;
+<b class="pc">&nbsp;        if (node.left == null)</b>
+<b class="fc">&nbsp;            lh = -1;</b>
+&nbsp;        else
+<b class="nc">&nbsp;            lh = node.left.height;</b>
+&nbsp;
+<b class="pc">&nbsp;        if (node.right == null)</b>
+<b class="fc">&nbsp;            rh = -1;</b>
+&nbsp;        else
+<b class="nc">&nbsp;            rh = node.right.height;</b>
+&nbsp;
+<b class="fc">&nbsp;        int difference = lh - rh;</b>
+<b class="pc">&nbsp;        if (difference &lt; -1 || difference &gt; 1){</b>
+<b class="nc">&nbsp;            return false; // Not balanced!</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        int max = AvlTree.max(lh, rh);</b>
+<b class="pc">&nbsp;        if (node.height != 1 + max){</b>
+<b class="nc">&nbsp;            return false; // Wrong value in height field!</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public boolean repOK_Ordered(AvlTree root) {
+<b class="nc">&nbsp;        int min = repOK_findMin(root);</b>
+<b class="nc">&nbsp;        int max = repOK_findMax(root);</b>
+<b class="nc">&nbsp;        if (!repOK_ElementsAreOrdered(root, min-1, max+1)) {</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // PEND: What does this do? Is it really necessary?
+&nbsp;		/*
+&nbsp;		List&lt;AvlTree&gt; worklist = new ArrayList&lt;AvlTree&gt;();
+&nbsp;		worklist.add(root);
+&nbsp;		while (!worklist.isEmpty()) {
+&nbsp;			AvlTree current = worklist.remove(0);
+&nbsp;			if (current.left() != null) {
+&nbsp;				worklist.add(current.left());
+&nbsp;			}
+&nbsp;			if (current.right() != null) {
+&nbsp;				worklist.add(current.right());
+&nbsp;			}
+&nbsp;		}
+&nbsp;		 */
+&nbsp;
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Return smallest element.
+&nbsp;    // Assume root != null.
+&nbsp;    //
+&nbsp;    private int repOK_findMin(AvlTree root) {
+<b class="nc">&nbsp;        AvlTree curr = root;</b>
+<b class="nc">&nbsp;        while (curr.left() != null) {</b>
+<b class="nc">&nbsp;            curr = curr.left();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return curr.element;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Return largest element.
+&nbsp;    // Assume root != null.
+&nbsp;    //
+&nbsp;    private int repOK_findMax(AvlTree root) {
+<b class="nc">&nbsp;        AvlTree curr = root;</b>
+<b class="nc">&nbsp;        while (curr.right() != null) {</b>
+<b class="nc">&nbsp;            curr = curr.right();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return curr.element;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Return true iff e is a strict (no dups allowed!) search tree.
+&nbsp;    // Assume e != null.
+&nbsp;    //
+&nbsp;    public boolean repOK_ElementsAreOrdered(AvlTree e, int min, int max) {
+<b class="nc">&nbsp;        if ((e.element &lt;= min) || (e.element &gt;= max)) {</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (e.left() != null) {</b>
+<b class="nc">&nbsp;            if (!repOK_ElementsAreOrdered(e.left(), min, e.element)) {</b>
+<b class="nc">&nbsp;                return false;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        if (e.right() != null) {</b>
+<b class="nc">&nbsp;            if (!repOK_ElementsAreOrdered(e.right(), e.element, max)) {</b>
+<b class="nc">&nbsp;                return false;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // ~~~~~~~~~ End of repOK_Concrete ~~~~~~~~~~
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    // ~~~~~~~~~ Begin dumpTree (just for manual testing purposes) ~~~~~~~~~~~
+&nbsp;
+&nbsp;    public static void dumpTree(AvlTree root) {
+<b class="nc">&nbsp;        System.out.println(&quot;&quot;);</b>
+<b class="nc">&nbsp;        dumpTree(root, 0);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private static void dumpTree(AvlTree root, int level) {
+<b class="nc">&nbsp;        if(root == null)</b>
+&nbsp;            return;
+<b class="nc">&nbsp;        dumpTree(root.right, level+1);</b>
+<b class="nc">&nbsp;        if(level != 0){</b>
+<b class="nc">&nbsp;            for(int i = 0; i &lt; level - 1; i++)</b>
+<b class="nc">&nbsp;                System.out.print(&quot;\t&quot;);</b>
+&nbsp;            //			System.out.println(&quot;|-------&quot; + root.element);
+<b class="nc">&nbsp;            System.out.println(&quot;|-------&quot; + root.hashCode());</b>
+&nbsp;        }
+&nbsp;        else
+&nbsp;            //			System.out.println(root.element);
+<b class="nc">&nbsp;            System.out.println(root.hashCode());</b>
+<b class="nc">&nbsp;        dumpTree(root.left, level+1);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // ~~~~~~~~~ End of dumpTree ~~~~~~~~~~
+&nbsp;
+&nbsp;
+&nbsp;    public void myMethodTest(AvlTree avl) {
+<b class="nc">&nbsp;        if (avl != null)</b>
+<b class="nc">&nbsp;            avl = avl.left;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //marked in tables as repOK_Concrete
+<b class="fc">&nbsp;    private static int LIMIT = 10;</b>
+&nbsp;    public static void main(String[] args) {
+&nbsp;
+<b class="nc">&nbsp;        AvlTree X = new AvlTree(10);</b>
+&nbsp;        // X = (AvlTree) DebugBounded.makeSymbolicRef(&quot;X&quot;, X);
+&nbsp;//		X = (AvlTree) DebugBounded.makeSymbolicRefBounded(&quot;X&quot;, X);
+&nbsp;
+<b class="nc">&nbsp;        if (X != null) {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                X.insert(X, 5);</b>
+&nbsp;
+<b class="nc">&nbsp;            } catch (Exception e) {</b>
+<b class="nc">&nbsp;                X.dumpRootStructure(X);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            X.countStructure(X);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;} // ~~~~~~~~~~~~~~~~~ End of class ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-02-03 18:32</div>
+</div>
+</body>
+</html>
